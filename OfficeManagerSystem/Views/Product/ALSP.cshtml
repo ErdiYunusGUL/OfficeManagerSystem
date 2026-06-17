@@ -1,0 +1,53 @@
+﻿@{
+    ViewData["Title"] = "ALSP (Mal Kabul)";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-7">
+            <div class="card shadow-sm border-0">
+                <div class="card-header text-white" style="background-color: #2c3e50;">
+                    <h4 class="mb-0"><i class="bi bi-clipboard-check"></i> ALSP - Ürün Giriş Fişi</h4>
+                </div>
+                <div class="card-body bg-light">
+                    
+                    <p class="text-muted mb-4">
+                        Sistemde tanımlı (Ana Verisi açılmış) ürünlerin depo kabullerini bu ekrandan gerçekleştirebilirsiniz. 
+                        <em>(Not: Listede olmayan ürünler için önce "Yeni Eşya Ekle" ekranından kimlik oluşturunuz.)</em>
+                    </p>
+
+                    <form asp-action="ALSP" method="post">
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Kabul Edilecek Eşya (SKU - İsim - Renk)</label>
+                            <select name="productId" class="form-select border-secondary shadow-sm" asp-items="ViewBag.MasterProducts" required>
+                                <option value="">Ürün seçiniz...</option>
+                            </select>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Giriş Yapılacak Depo</label>
+                                <select name="locationId" class="form-select border-secondary shadow-sm" asp-items="ViewBag.Depots" required>
+                                    <option value="">Depo seçiniz...</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Kabul Adedi</label>
+                                <input type="number" name="quantity" class="form-control border-secondary shadow-sm" min="1" placeholder="Örn: 20" required />
+                            </div>
+                        </div>
+
+                        <hr />
+
+                        <div class="d-flex justify-content-end">
+                            <a asp-action="Index" class="btn btn-outline-secondary me-2">İptal</a>
+                            <button type="submit" class="btn btn-primary px-4 fw-bold">ALSP Fişini Onayla</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

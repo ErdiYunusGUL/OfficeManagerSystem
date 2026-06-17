@@ -1,0 +1,45 @@
+﻿@model Office.Model.Location
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Yeni Lokasyon (Depo/Daire) Ekle</h4>
+                </div>
+                <div class="card-body bg-light">
+                    
+                    <form asp-action="Create" method="post">
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label fw-bold"></label>
+                            <input asp-for="Name" class="form-control" placeholder="Örn: Sıfır Ürünler Deposu veya Şişli Daire 1" />
+                            <span asp-validation-for="Name" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="LocationType" class="form-label fw-bold"></label>
+                            <select asp-for="LocationType" class="form-select">
+                                <option value="">Lütfen Tip Seçiniz...</option>
+                                <option value="Depo">Depo</option>
+                                <option value="Daire">Daire</option>
+                            </select>
+                            <span asp-validation-for="LocationType" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Address" class="form-label fw-bold"></label>
+                            <textarea asp-for="Address" class="form-control" rows="3" placeholder="Açık adres giriniz..."></textarea>
+                            <span asp-validation-for="Address" class="text-danger small"></span>
+                        </div>
+
+                        <div class="d-flex justify-content-end">
+                            <a asp-action="Index" class="btn btn-outline-secondary me-2">İptal ve Geri Dön</a>
+                            <button type="submit" class="btn btn-primary px-4">Kaydet</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

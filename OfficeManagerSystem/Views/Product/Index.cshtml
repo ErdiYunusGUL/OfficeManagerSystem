@@ -1,0 +1,613 @@
+﻿@model IEnumerable<Office.Model.Product>
+
+@{
+    var products = Model?.ToList() ?? Enumerable.Empty<Office.Model.Product>().ToList();
+
+    var allStockDetails = ViewBag.StockDetails as IEnumerable<Office.Model.LocationStock>
+                          ?? Enumerable.Empty<Office.Model.LocationStock>();
+}
+
+<style>
+    .asset-shell {
+        position: relative;
+        min-height: 100%;
+        padding: 34px;
+        border-radius: 34px;
+        overflow: hidden;
+        background: radial-gradient(circle at top left, rgba(59, 130, 246, .25), transparent 32%), radial-gradient(circle at top right, rgba(16, 185, 129, .18), transparent 30%), linear-gradient(135deg, #020617 0%, #0f172a 48%, #111827 100%);
+        box-shadow: 0 30px 80px rgba(2, 6, 23, .28);
+    }
+
+        .asset-shell::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px);
+            background-size: 42px 42px;
+            mask-image: linear-gradient(to bottom, black, transparent 75%);
+            pointer-events: none;
+        }
+
+    .asset-content {
+        position: relative;
+        z-index: 1;
+    }
+
+    .asset-topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 22px;
+        margin-bottom: 24px;
+        padding: 22px;
+        border: 1px solid rgba(255, 255, 255, .12);
+        border-radius: 28px;
+        background: rgba(255, 255, 255, .08);
+        backdrop-filter: blur(18px);
+        box-shadow: 0 22px 55px rgba(0, 0, 0, .22);
+    }
+
+    .asset-title-wrap {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+
+    .asset-title-icon {
+        width: 56px;
+        height: 56px;
+        flex: 0 0 56px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 20px;
+        color: #e0f2fe;
+        background: linear-gradient(135deg, rgba(37, 99, 235, .95), rgba(14, 165, 233, .8));
+        box-shadow: 0 18px 34px rgba(37, 99, 235, .32);
+    }
+
+    .asset-title {
+        margin: 0;
+        color: #f8fafc;
+        font-size: clamp(1.35rem, 2vw, 2rem);
+        font-weight: 900;
+        letter-spacing: -.8px;
+    }
+
+    .asset-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: flex-end;
+    }
+
+    .asset-action-btn {
+        position: relative;
+        isolation: isolate;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: 0;
+        border-radius: 18px;
+        padding: 12px 18px;
+        color: #fff;
+        font-weight: 800;
+        text-decoration: none;
+        overflow: hidden;
+        transition: .22s ease;
+        box-shadow: 0 16px 32px rgba(0, 0, 0, .22);
+    }
+
+        .asset-action-btn::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            opacity: 0;
+            background: rgba(255, 255, 255, .18);
+            transition: .22s ease;
+        }
+
+        .asset-action-btn:hover {
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+            .asset-action-btn:hover::before {
+                opacity: 1;
+            }
+
+        .asset-action-btn.alsp {
+            background: linear-gradient(135deg, #2563eb, #0284c7);
+        }
+
+        .asset-action-btn.create {
+            background: linear-gradient(135deg, #16a34a, #059669);
+        }
+
+    .asset-panel {
+        overflow: hidden;
+        border-radius: 30px;
+        background: rgba(255, 255, 255, .96);
+        box-shadow: 0 28px 70px rgba(0, 0, 0, .24);
+        border: 1px solid rgba(255, 255, 255, .6);
+    }
+
+    .asset-table {
+        width: 100%;
+        margin: 0;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+        .asset-table thead th {
+            padding: 18px 24px;
+            background: #f8fafc;
+            color: #475569;
+            font-size: .76rem;
+            font-weight: 900;
+            letter-spacing: .75px;
+            text-transform: uppercase;
+            border-bottom: 1px solid #e2e8f0;
+            white-space: nowrap;
+        }
+
+        .asset-table tbody td {
+            padding: 20px 24px;
+            border-bottom: 1px solid #eef2f7;
+            vertical-align: middle;
+        }
+
+        .asset-table tbody tr {
+            transition: .2s ease;
+        }
+
+            .asset-table tbody tr:hover {
+                background: linear-gradient(90deg, #f8fafc, #eff6ff);
+            }
+
+            .asset-table tbody tr:last-child td {
+                border-bottom: 0;
+            }
+
+    .asset-name-block {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .asset-mini-icon {
+        width: 42px;
+        height: 42px;
+        flex: 0 0 42px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 15px;
+        background: #ecfeff;
+        color: #0891b2;
+        box-shadow: inset 0 0 0 1px #cffafe;
+    }
+
+    .asset-name {
+        color: #0f172a;
+        font-weight: 900;
+        letter-spacing: -.2px;
+    }
+
+    .asset-variant {
+        display: inline-flex;
+        margin-left: 6px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: #f1f5f9;
+        color: #64748b;
+        font-size: .78rem;
+        font-weight: 800;
+    }
+
+    .asset-sku {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 13px;
+        border-radius: 14px;
+        color: #334155;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        font-weight: 800;
+        font-size: .88rem;
+    }
+
+    .asset-stock-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: 0;
+        border-radius: 16px;
+        padding: 10px 16px;
+        background: #dcfce7;
+        color: #166534;
+        font-weight: 900;
+        box-shadow: inset 0 0 0 1px #bbf7d0;
+        transition: .22s ease;
+    }
+
+        .asset-stock-button:hover {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 16px 30px rgba(22, 163, 74, .28);
+        }
+
+        .asset-stock-button i {
+            width: 28px;
+            height: 28px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, .55);
+        }
+
+    .asset-modal .modal-dialog {
+        max-width: 560px;
+    }
+
+    .asset-modal .modal-content {
+        overflow: hidden;
+        border: 0;
+        border-radius: 30px;
+        background: #f8fafc;
+        box-shadow: 0 35px 90px rgba(2, 6, 23, .35);
+    }
+
+    .asset-modal-header {
+        position: relative;
+        padding: 24px;
+        color: #fff;
+        border-bottom: 0;
+        background: radial-gradient(circle at top right, rgba(14, 165, 233, .45), transparent 35%), linear-gradient(135deg, #020617, #0f172a);
+    }
+
+        .asset-modal-header::after {
+            content: "";
+            position: absolute;
+            left: 24px;
+            right: 24px;
+            bottom: 0;
+            height: 1px;
+            background: rgba(255, 255, 255, .12);
+        }
+
+    .asset-modal-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0;
+        font-weight: 900;
+        letter-spacing: -.3px;
+    }
+
+    .asset-modal-title-icon {
+        width: 42px;
+        height: 42px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 15px;
+        background: rgba(250, 204, 21, .16);
+        color: #facc15;
+    }
+
+    .asset-modal-body {
+        padding: 24px;
+    }
+
+    .asset-empty-box {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 0;
+        padding: 17px 18px;
+        border: 1px solid #fde68a;
+        border-radius: 20px;
+        background: #fffbeb;
+        color: #92400e;
+        font-weight: 800;
+    }
+
+    .asset-location-list {
+        display: grid;
+        gap: 12px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .asset-location-card {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 16px;
+        border-radius: 22px;
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 14px 28px rgba(15, 23, 42, .06);
+    }
+
+    .asset-location-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 0;
+    }
+
+    .asset-location-icon {
+        width: 42px;
+        height: 42px;
+        flex: 0 0 42px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 15px;
+    }
+
+        .asset-location-icon.depo {
+            color: #1d4ed8;
+            background: #dbeafe;
+        }
+
+        .asset-location-icon.other {
+            color: #0369a1;
+            background: #e0f2fe;
+        }
+
+    .asset-location-name {
+        color: #111827;
+        font-weight: 900;
+    }
+
+    .asset-quantity {
+        flex: 0 0 auto;
+        padding: 8px 13px;
+        border-radius: 999px;
+        color: #713f12;
+        background: linear-gradient(135deg, #fef3c7, #fde68a);
+        font-weight: 900;
+        box-shadow: inset 0 0 0 1px #fcd34d;
+    }
+
+    .asset-modal-footer {
+        padding: 18px 24px 24px;
+        border-top: 0;
+        background: #f8fafc;
+    }
+
+    .asset-close-btn {
+        border: 0;
+        border-radius: 15px;
+        padding: 10px 20px;
+        background: #0f172a;
+        color: #fff;
+        font-weight: 800;
+        transition: .2s ease;
+    }
+
+        .asset-close-btn:hover {
+            background: #1e293b;
+            color: #fff;
+            transform: translateY(-1px);
+        }
+
+    @@media (max-width: 768px) {
+        .asset-shell {
+            padding: 18px;
+            border-radius: 24px;
+        }
+
+        .asset-topbar {
+            align-items: stretch;
+            border-radius: 22px;
+        }
+
+        .asset-title-wrap {
+            align-items: flex-start;
+        }
+
+        .asset-actions {
+            width: 100%;
+        }
+
+        .asset-action-btn {
+            flex: 1 1 100%;
+            justify-content: center;
+        }
+
+        .asset-table thead th,
+        .asset-table tbody td {
+            padding: 16px;
+        }
+
+        .asset-name-block {
+            align-items: flex-start;
+        }
+    }
+</style>
+
+<div class="container mt-4">
+    <div class="asset-shell">
+        <div class="asset-content">
+
+            <div class="asset-topbar">
+                <div class="asset-title-wrap">
+                    <span class="asset-title-icon">
+                        <i class="bi bi-box-seam fs-3"></i>
+                    </span>
+
+                    <h2 class="asset-title">
+                        Eşya ve Demirbaş Envanteri
+                    </h2>
+                </div>
+
+                <div class="asset-actions">
+                    <a asp-action="ALSP" class="asset-action-btn alsp">
+                        <i class="bi bi-box-arrow-in-down"></i>
+                        ALSP Girişi Yap
+                    </a>
+
+                    <a asp-action="Create" class="asset-action-btn create">
+                        <i class="bi bi-plus-lg"></i>
+                        + Yeni Eşya Ekle
+                    </a>
+                </div>
+            </div>
+
+            <div class="asset-panel">
+                <div class="table-responsive">
+                    <table class="asset-table">
+                        <thead>
+                            <tr>
+                                <th>Eşya/Demirbaş Adı</th>
+                                <th>Stok Kodu (SKU)</th>
+                                <th>Sistemdeki Toplam Stok (Detay)</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (var item in products)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="asset-name-block">
+                                            <span class="asset-mini-icon">
+                                                <i class="bi bi-box"></i>
+                                            </span>
+
+                                            <div>
+                                                <span class="asset-name">
+                                                    @item.Name
+                                                </span>
+
+                                                @if (!string.IsNullOrEmpty(item.Variant))
+                                                {
+                                                    <span class="asset-variant">
+                                                        (@item.Variant)
+                                                    </span>
+                                                }
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <td>
+                                        <span class="asset-sku">
+                                            <i class="bi bi-upc-scan"></i>
+                                            @item.SkuCode
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <button type="button"
+                                                class="asset-stock-button"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#stockModal-@item.Id">
+                                            <i class="bi bi-search"></i>
+                                            @item.TotalStock Adet
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@foreach (var item in products)
+{
+    var stockDetails = allStockDetails
+        .Where(s => s.ProductId == item.Id)
+        .ToList();
+
+    <div class="modal fade asset-modal"
+         id="stockModal-@item.Id"
+         tabindex="-1"
+         aria-labelledby="modalLabel-@item.Id"
+         aria-hidden="true">
+
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+                <div class="modal-header asset-modal-header">
+                    <h5 class="modal-title asset-modal-title" id="modalLabel-@item.Id">
+                        <span class="asset-modal-title-icon">
+                            <i class="bi bi-geo-alt-fill"></i>
+                        </span>
+                        @item.Name Stok Dağılımı
+                    </h5>
+
+                    <button type="button"
+                            class="btn-close btn-close-white"
+                            data-bs-dismiss="modal"
+                            aria-label="Close">
+                    </button>
+                </div>
+
+                <div class="asset-modal-body">
+                    @if (!stockDetails.Any())
+                    {
+                        <div class="asset-empty-box">
+                            <i class="bi bi-exclamation-triangle"></i>
+                            Bu ürün henüz hiçbir lokasyonda bulunmuyor.
+                        </div>
+                    }
+                    else
+                    {
+                        <ul class="asset-location-list">
+                            @foreach (var stock in stockDetails)
+                            {
+                                <li class="asset-location-card">
+                                    <div class="asset-location-left">
+                                        @if (stock.Location.LocationType == "Depo")
+                                        {
+                                            <span class="asset-location-icon depo">
+                                                <i class="bi bi-building"></i>
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="asset-location-icon other">
+                                                <i class="bi bi-house-door"></i>
+                                            </span>
+                                        }
+
+                                        <span class="asset-location-name">
+                                            @stock.Location.Name
+                                        </span>
+                                    </div>
+
+                                    <span class="asset-quantity">
+                                        @stock.Quantity Adet
+                                    </span>
+                                </li>
+                            }
+                        </ul>
+                    }
+                </div>
+
+                <div class="modal-footer asset-modal-footer">
+                    <button type="button"
+                            class="asset-close-btn"
+                            data-bs-dismiss="modal">
+                        Kapat
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}

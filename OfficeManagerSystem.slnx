@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="Office.Data/Office.Data.csproj" />
+  <Project Path="Office.Model/Office.Model.csproj" />
+  <Project Path="OfficeManagerSystem/OfficeUI.csproj" />
+</Solution>

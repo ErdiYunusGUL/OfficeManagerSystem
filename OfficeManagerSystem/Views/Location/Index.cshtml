@@ -1,0 +1,43 @@
+﻿@model IEnumerable<Office.Model.Location>
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="bi bi-building"></i> Lokasyon Yönetimi</h2>
+        <a asp-action="Create" class="btn btn-success shadow-sm">
+            + Yeni Lokasyon Ekle
+        </a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <table class="table table-hover table-striped mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Lokasyon Adı</th>
+                        <th>Tipi</th>
+                        <th>Adres</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="align-middle fw-bold">@item.Name</td>
+                            <td class="align-middle">
+                                @if (item.LocationType == "Depo")
+                                {
+                                    <span class="badge bg-primary">Depo</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-info text-dark">Daire</span>
+                                }
+                            </td>
+                            <td class="align-middle text-muted">@item.Address</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,52 @@
+﻿@model Office.Model.Product
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0">Yeni Eşya / Demirbaş Tanımla</h4>
+                </div>
+                <div class="card-body bg-light">
+                    
+                    <form asp-action="Create" method="post">
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label fw-bold"></label>
+                            <input asp-for="Name" class="form-control" placeholder="Örn: Çift Kişilik Yatak, L Koltuk, 27 inç Monitör" />
+                            <span asp-validation-for="Name" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="SkuCode" class="form-label fw-bold"></label>
+                            <input asp-for="SkuCode" class="form-control" placeholder="Örn: YTK-CIFT-001" />
+                            <span asp-validation-for="SkuCode" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="TotalStock" class="form-label fw-bold"></label>
+                            <input asp-for="TotalStock" class="form-control" type="number" min="0" placeholder="0" />
+                            <span asp-validation-for="TotalStock" class="text-danger small"></span>
+                            <div class="form-text">Sisteme giren toplam eşya adedini belirtin.</div>
+                        </div>
+
+                       <div class="mb-4 p-3 bg-white border rounded">
+    <label class="form-label fw-bold text-primary"><i class="bi bi-truck"></i> Eşyaların Teslim Edildiği İlk Lokasyon</label>
+    
+    <select name="initialLocationId" class="form-select border-primary" asp-items="ViewBag.Locations" required>
+        <option value="">Lütfen giriş deposunu/dairesini seçiniz...</option>
+    </select>
+    
+    <div class="form-text text-muted">Satın alınan bu eşyalar tırdan inip ilk olarak hangi depoya girecek?</div>
+</div>
+                        
+                        <div class="d-flex justify-content-end">
+                            <a asp-action="Index" class="btn btn-outline-secondary me-2">İptal ve Geri Dön</a>
+                            <button type="submit" class="btn btn-success px-4">Kaydet</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
